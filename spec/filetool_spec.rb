@@ -7,7 +7,7 @@ RSpec.describe "filetool" do
     file.write("hello\nworld\n")
     file.close
 
-    output = `ruby lib/filetool.rb show #{file.path}`
+    output = `ruby bin/filetool show #{file.path}`
 
     expect(output).to include("hello")
     expect(output).to include("world")
@@ -18,7 +18,7 @@ RSpec.describe "filetool" do
     file.write("hello\n")
     file.close
 
-    output = `ruby lib/filetool.rb stats #{file.path}`
+    output = `ruby bin/filetool stats #{file.path}`
 
     expect(output).to include("Lines: 1")
     expect(output).to include("Words: 1")
@@ -30,7 +30,7 @@ RSpec.describe "filetool" do
     file.write("hello\n")
     file.close
 
-   `ruby lib/filetool.rb add #{file.path} "world"`
+   `ruby bin/filetool add #{file.path} "world"`
 
    content = File.read(file.path)
     expect(content).to include("hello")

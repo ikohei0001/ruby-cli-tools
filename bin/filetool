@@ -1,0 +1,43 @@
+require_relative "../lib/filetool.rb"
+
+if __FILE__ == $0
+  
+  command = ARGV[0]
+  filename = ARGV[1]
+  text = ARGV[2]
+
+  if command.nil? || filename.nil?
+    puts "Usage:"
+    puts " ruby filetool.rb show <file>"
+    puts " ruby filetool.rb stats <file>"
+    puts " ruby filetool.rb add <file> \"text\""
+    exit
+  end
+
+    unless File.exist?(filename)
+    puts "File not found: #{filename}"
+    exit
+  end
+
+  case command
+  when "show"
+    puts Filetool.show(filename)
+
+  when "stats"
+    result = Filetool.stats(filename)
+    puts "Lines: #{result[:lines]}"
+    puts "Words: #{result[:words]}"
+    puts "Chars: #{result[:chars]}"
+
+  when "add"
+    if text.nil?
+      puts "Text to add is missing"
+      exit
+    end
+    Filetool.add(filename, text)
+    puts "Added text to #{filename}"
+
+  else
+    puts "unknown command: #{command}"
+  end
+end
