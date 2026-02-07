@@ -24,4 +24,16 @@ RSpec.describe "filetool" do
     expect(output).to include("Words: 1")
     expect(output).to include("Chars: 6")
   end
+
+  it "adds new text" do
+    file = Tempfile.new('test')
+    file.write("hello\n")
+    file.close
+
+   `ruby lib/filetool.rb add #{file.path} "world"`
+
+   content = File.read(file.path)
+    expect(content).to include("hello")
+    expect(content).to include("world")
+  end
 end
