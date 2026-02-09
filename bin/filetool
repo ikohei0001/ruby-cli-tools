@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require_relative "../lib/filetool.rb"
 
 if __FILE__ == $0
@@ -8,9 +9,9 @@ if __FILE__ == $0
 
   if command.nil? || filename.nil?
     puts "Usage:"
-    puts " ruby filetool.rb show <file>"
-    puts " ruby filetool.rb stats <file>"
-    puts " ruby filetool.rb add <file> \"text\""
+    puts " filetool show <file>"
+    puts " filetool stats <file>"
+    puts " filetool add <file> \"text\""
     exit
   end
 
