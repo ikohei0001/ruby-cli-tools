@@ -5,17 +5,19 @@ if __FILE__ == $0
   
   command = ARGV[0]
   filename = ARGV[1]
-  text = ARGV[2]
+  arg1 = ARGV[2]
+  arg2 = ARGV[3]
 
   if command.nil? || filename.nil?
     puts "Usage:"
     puts " filetool show <file>"
     puts " filetool stats <file>"
     puts " filetool add <file> \"text\""
+    puts " filetool search <file> \"text\""
     exit
   end
 
-    unless File.exist?(filename)
+  unless File.exist?(filename)
     puts "File not found: #{filename}"
     exit
   end
@@ -31,12 +33,19 @@ if __FILE__ == $0
     puts "Chars: #{result[:chars]}"
 
   when "add"
-    if text.nil?
+    if arg1.nil?
       puts "Text to add is missing"
       exit
     end
-    Filetool.add(filename, text)
+    Filetool.add(filename, arg1)
     puts "Added text to #{filename}"
+
+  when "search"
+    if arg1.nil?
+      puts "string to search is missing"
+      exit
+    end
+    puts Filetool.search(filename, arg1)
 
   else
     puts "unknown command: #{command}"
