@@ -21,6 +21,16 @@ module Filetool
     def add(filename, text)
       File.open(filename, 'a') { |f| f.puts text }
     end
+
+    def search(filename, string)
+      results = []
+      File.foreach(filename).with_index(1) do |line, no|
+        if line.include?(string)
+          results << "#{no}: #{line}"
+        end
+      end
+      results
+    end
   end
 end
 
