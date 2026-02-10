@@ -36,4 +36,14 @@ RSpec.describe "filetool" do
     expect(content).to include("hello")
     expect(content).to include("world")
   end
+
+  it "searches a string in a file" do
+    file = Tempfile.new('test')
+    file.write("hello\nworld\n")
+    file.close
+
+    output = `ruby bin/filetool search #{file.path} "hello"`
+
+    expect(output).to include("hello")
+  end
 end
