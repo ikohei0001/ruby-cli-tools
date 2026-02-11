@@ -46,4 +46,16 @@ RSpec.describe "filetool" do
 
     expect(output).to include("hello")
   end
+
+  it "replaces a text for a given string" do
+    file = Tempfile.new('test')
+    file.write("hello\nworld\n")
+    file.close
+
+    `ruby bin/filetool replace #{file.path} "world" "country"`
+
+    content = File.read(file.path)
+    expect(content).to include("country")
+    expect(content).not_to include("world")
+  end
 end
