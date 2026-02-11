@@ -1,3 +1,5 @@
+require "tempfile"
+
 module Filetool
   class << self
     def show(filename)
@@ -31,6 +33,27 @@ module Filetool
       end
       results
     end
+
+    def replace!(filename, from, to)
+      results = []
+
+      Tempfile.create do |tmp|
+        File.foreach(filename).with_index(1) do |line, no|
+          if line.include?(from)
+            replaced = line.gsub(from, to)
+            results << "#{no}: #{replaced.chomp}"
+            tmp.write(replaced)
+          else
+            tmp.write(line)
+          end
+        end
+
+        tmp.flush
+        File.write(filename, File.read(tmp.path))
+      end
+      results
+    end
   end
 end
+
 
