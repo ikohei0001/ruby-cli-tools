@@ -14,6 +14,7 @@ if __FILE__ == $0
     puts " filetool stats <file>"
     puts " filetool add <file> \"text\""
     puts " filetool search <file> \"text\""
+    puts " filetool replace <file> \"from\" \"to\""
     exit
   end
 
@@ -46,6 +47,13 @@ if __FILE__ == $0
       exit
     end
     puts Filetool.search(filename, arg1)
+
+  when "replace"
+    if arg1.nil? || arg2.nil?
+      puts "string to replace is missing"
+      exit
+    end
+    puts Filetool.replace!(filename, arg1, arg2)
 
   else
     puts "unknown command: #{command}"
