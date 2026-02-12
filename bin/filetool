@@ -20,42 +20,53 @@ if __FILE__ == $0
 
   unless File.exist?(filename)
     puts "File not found: #{filename}"
-    exit
+    exit 1
   end
 
-  case command
-  when "show"
-    puts Filetool.show(filename)
+  begin
+    case command
+    when "show"
+      puts Filetool.show(filename)
 
-  when "stats"
-    result = Filetool.stats(filename)
-    puts "Lines: #{result[:lines]}"
-    puts "Words: #{result[:words]}"
-    puts "Chars: #{result[:chars]}"
+    when "stats"
+      result = Filetool.stats(filename)
+      puts "Lines: #{result[:lines]}"
+      puts "Words: #{result[:words]}"
+      puts "Chars: #{result[:chars]}"
 
-  when "add"
-    if arg1.nil?
-      puts "Text to add is missing"
-      exit
+    when "add"
+      if arg1.nil?
+        puts "Text to add is missing"
+        exit 1
+      end
+      Filetool.add(filename, arg1)
+      puts "Added text to #{filename}"
+
+    when "search"
+      if arg1.nil?
+        puts "string to search is missing"
+        exit 1
+      end
+      puts Filetool.search(filename, arg1)
+
+    when "replace"
+      if arg1.nil? || arg2.nil?
+        puts "string to replace is missing"
+        exit 1
+      end
+      puts Filetool.replace!(filename, arg1, arg2)
+
+    else
+      puts "unknown command: #{command}"
     end
-    Filetool.add(filename, arg1)
-    puts "Added text to #{filename}"
-
-  when "search"
-    if arg1.nil?
-      puts "string to search is missing"
-      exit
-    end
-    puts Filetool.search(filename, arg1)
-
-  when "replace"
-    if arg1.nil? || arg2.nil?
-      puts "string to replace is missing"
-      exit
-    end
-    puts Filetool.replace!(filename, arg1, arg2)
-
-  else
-    puts "unknown command: #{command}"
+  rescue Errno::ENOENT
+    puts "File not found: #{filename}"
+    exit 1
+  rescue Errno::EACCES
+    puts "Permission denied: #{filename}"
+    exit 1
+  rescue => e
+    puts "Unexpected error: #{e.message}"
+    exit 1
   end
 end
