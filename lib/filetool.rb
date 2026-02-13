@@ -53,6 +53,13 @@ module Filetool
       end
       results
     end
+
+    def create(filename)
+      if File.exist?(filename)
+        raise "File already exists"
+      end
+      File.write(filename, "")
+    end
   end
 end
 
