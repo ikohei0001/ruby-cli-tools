@@ -58,4 +58,23 @@ RSpec.describe "filetool" do
     expect(content).to include("country")
     expect(content).not_to include("world")
   end
+
+  it "creates a new file" do
+    filename = "test.txt"
+    
+    File.delete(filename) if File.exist?(filename)
+
+    Filetool.create(filename)
+    expect(File.exist?(filename)).to be true
+
+    File.delete(filename)
+  end
+
+  it "does not create a new file because of existing file" do
+    File.write("test.txt", "hello") 
+
+    expect { Filetool.create("test.txt") }.to raise_error(RuntimeError, "File already exists")
+
+    File.delete("test.txt") if File.exist?("test.txt")
+  end
 end
