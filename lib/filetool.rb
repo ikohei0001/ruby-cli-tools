@@ -24,13 +24,25 @@ module Filetool
       File.open(filename, 'a') { |f| f.puts text }
     end
 
-    def search(filename, string)
+    def search(filename, string, options = {})
       results = []
+      
+      pattern = options[:ignore_case] ? /#{Regexp.escape(string)}/i : string
+
       File.foreach(filename).with_index(1) do |line, no|
-        if line.include?(string)
-          results << "#{no}: #{line}"
+        if line.match?(pattern)
+          if options[:count]
+            results << no
+          else
+            results << "#{no}: #{line}"
+          end
         end
       end
+
+      if options[:count]
+        return results.size
+      end
+
       results
     end
 
@@ -39,7 +51,7 @@ module Filetool
 
       Tempfile.create do |tmp|
         File.foreach(filename).with_index(1) do |line, no|
-          if line.include?(from)
+          if line.match?(from)
             replaced = line.gsub(from, to)
             results << "#{no}: #{replaced.chomp}"
             tmp.write(replaced)
