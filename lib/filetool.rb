@@ -60,6 +60,13 @@ module Filetool
       end
       File.write(filename, "")
     end
+
+    def delete(filename)
+      unless File.exist?(filename)
+        exit 1
+      end
+      File.delete(filename)
+    end
   end
 end
 
