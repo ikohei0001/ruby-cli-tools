@@ -47,6 +47,20 @@ RSpec.describe "filetool" do
     expect(output).to include("hello")
   end
 
+  it "the i option works" do
+    file = Tempfile.new("test")
+    File.write(file, "hello world")
+
+    expect(Filetool.search(file, "hello", {:ignore_case => true})).to eq(["1: hello world"])
+  end
+
+    it "the c option works" do
+    file = Tempfile.new("test")
+    File.write(file, "hello world")
+
+    expect(Filetool.search(file, "hello", {:count => true})).to eq(1)
+  end
+
   it "replaces a text for a given string" do
     file = Tempfile.new('test')
     file.write("hello\nworld\n")
