@@ -1,12 +1,27 @@
 #!/usr/bin/env ruby
 require_relative "../lib/filetool.rb"
+require "optparse"
 
 if __FILE__ == $0
+
+  options = {}
+
+  opt = OptionParser.new do |opts|
+    opts.on("-i", "--ignore-case", "Ignore case") do
+      options[:ignore_case] = true
+    end
+
+    opts.on("-c", "--count", "Count matched only") do
+      options[:count] = true
+    end
+  end
+
+  opt.parse!
   
-  command = ARGV[0]
-  filename = ARGV[1]
-  arg1 = ARGV[2]
-  arg2 = ARGV[3]
+  command = ARGV.shift
+  filename = ARGV.shift
+  arg1 = ARGV.shift
+  arg2 = ARGV.shift
 
   if command.nil? || filename.nil?
     puts "Usage:"
@@ -43,7 +58,7 @@ if __FILE__ == $0
         puts "string to search is missing"
         exit 1
       end
-      puts Filetool.search(filename, arg1)
+      puts Filetool.search(filename, arg1, options)
 
     when "replace"
       if arg1.nil? || arg2.nil?
@@ -57,7 +72,7 @@ if __FILE__ == $0
       puts "Created #{filename}"
 
     when "delete"
-      Filetool.delete(filetool)
+      Filetool.delete(filename)
       puts "Deleted #{filename}"
       
     else
