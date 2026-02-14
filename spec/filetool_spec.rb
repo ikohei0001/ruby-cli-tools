@@ -77,4 +77,15 @@ RSpec.describe "filetool" do
 
     File.delete("test.txt") if File.exist?("test.txt")
   end
+
+  it "deletes a file" do
+    file = Tempfile.new("test")
+    Filetool.delete(file.path)
+
+    expect(File.exist?(file.path)).to be false
+  end
+
+  it "does not delete a file that does not exist" do
+    expect(Filetool.delete("test.txt")).to eq("File not found")
+  end
 end
