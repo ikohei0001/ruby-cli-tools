@@ -56,8 +56,12 @@ if __FILE__ == $0
       Filetool.create(filename)
       puts "Created #{filename}"
 
+    when "delete"
+      Filetool.delete(filetool)
+      puts "Deleted #{filename}"
+      
     else
-      puts "unknown command: #{command}"
+      puts "Unknown command: #{command}"
     end
   rescue Errno::ENOENT
     puts "File not found: #{filename}"
