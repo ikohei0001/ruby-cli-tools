@@ -54,7 +54,7 @@ RSpec.describe "filetool" do
     expect(Filetool.search(file, "hello", {:ignore_case => true})).to eq(["1: hello world"])
   end
 
-    it "the c option works" do
+  it "the c option works" do
     file = Tempfile.new("test")
     File.write(file, "hello world")
 
@@ -101,5 +101,24 @@ RSpec.describe "filetool" do
 
   it "does not delete a file that does not exist" do
     expect(Filetool.delete("test.txt")).to eq("File not found")
+  end
+
+  it "renames a file" do
+    file = Tempfile.new('test')
+    new_path = file.path + "_rename"
+    Filetool.rename(file.path, new_path)
+
+    expect(File.exist?(new_path)).to be true
+
+    File.delete(new_path)
+  end
+
+  it "raises error when new file already exists" do
+    Tempfile.create("old") do |old_file|
+      Tempfile.create("new") do |new_file|
+
+        expect { Filetool.rename(old_file.path, new_file.path)}.to raise_error("File already exist: #{new_file.path}")
+      end
+    end
   end
 end
