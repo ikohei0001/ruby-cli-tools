@@ -75,9 +75,16 @@ module Filetool
 
     def delete(filename)
       unless File.exist?(filename)
-        exit 1
+        return "File not found"
       end
       File.delete(filename)
+    end
+
+    def rename(old_name, new_name)
+      raise "File not found #{old_name}" unless File.exist?(old_name)
+      raise "File already exist: #{new_name}" if File.exist?(new_name)
+
+      File.rename(old_name, new_name)
     end
   end
 end
