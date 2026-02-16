@@ -74,6 +74,10 @@ if __FILE__ == $0
     when "delete"
       Filetool.delete(filename)
       puts "Deleted #{filename}"
+
+    when "rename"
+      Filetool.rename(filename, arg1)
+      puts "Renamed #{filename} to #{arg1}"
       
     else
       puts "Unknown command: #{command}"
