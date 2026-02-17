@@ -1,5 +1,6 @@
 require_relative "../lib/filetool.rb"
 require "tempfile"
+require "tmpdir"
 
 RSpec.describe "filetool" do
   it "shows file content" do
@@ -119,6 +120,21 @@ RSpec.describe "filetool" do
 
         expect { Filetool.rename(old_file.path, new_file.path)}.to raise_error("File already exist: #{new_file.path}")
       end
+    end
+  end
+
+  it "makes a directory" do
+    Dir.mktmpdir do |tmp|
+      path = File.join(tmp, "test")
+      Filetool.mkdir(path)
+
+      expect(Dir.exist?(path)).to be true
+    end
+  end
+
+  it "does not make a existing file"  do
+    Dir.mktmpdir do |dir|
+      expect { Filetool.mkdir(dir) }.to raise_error("Directory exist: #{dir}")
     end
   end
 end
