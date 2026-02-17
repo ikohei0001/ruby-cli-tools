@@ -86,6 +86,12 @@ module Filetool
 
       File.rename(old_name, new_name)
     end
+
+    def mkdir(dirname)
+      raise "Directory exist: #{dirname}" if Dir.exist?(dirname)
+
+      Dir.mkdir(dirname)
+    end
   end
 end
 
