@@ -78,7 +78,10 @@ if __FILE__ == $0
     when "rename"
       Filetool.rename(filename, arg1)
       puts "Renamed #{filename} to #{arg1}"
-      
+
+    when "mkdir"
+      Filetool.mkdir(arg0)
+      puts "Directory created"
     else
       puts "Unknown command: #{command}"
     end
