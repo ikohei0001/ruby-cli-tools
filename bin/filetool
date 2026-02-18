@@ -82,6 +82,12 @@ if __FILE__ == $0
     when "mkdir"
       Filetool.mkdir(arg0)
       puts "Directory created"
+
+    when "rmdir"
+      Filetool.rmdir(arg0)
+      puts "Directory deleted"
+
+
     else
       puts "Unknown command: #{command}"
     end
