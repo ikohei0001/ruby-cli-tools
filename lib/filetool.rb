@@ -92,6 +92,13 @@ module Filetool
 
       Dir.mkdir(dirname)
     end
+
+    def rmdir(dirname)
+      raise "No such directory: #{dirname}" unless Dir.exist?(dirname)
+      raise "Directory is not empty: #{dirname}" unless Dir.empty?(dirname)
+
+      Dir.rmdir(dirname)
+    end
   end
 end
 
