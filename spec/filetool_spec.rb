@@ -137,4 +137,27 @@ RSpec.describe "filetool" do
       expect { Filetool.mkdir(dir) }.to raise_error("Directory exist: #{dir}")
     end
   end
+
+  it "deletes a directory" do
+    tmp = Dir.mktmpdir
+
+    Filetool.rmdir(tmp)
+
+    expect(Dir.exist?(tmp)).to be false
+  end
+
+  it "does not delete a directory that does not exist" do
+    dirname = "not_exist"
+
+    expect(Dir.exist?(dirname)).to be false
+    expect { Filetool.rmdir(dirname) }.to raise_error("No such directory: #{dirname}")
+  end
+
+  it "does not delete a non-empty directory" do
+    Dir.mktmpdir do |tmp|
+      File.write(File.join(tmp, "test"), "")
+
+      expect { Filetool.rmdir(tmp) }.to raise_error("Directory is not empty: #{tmp}")
+    end
+  end
 end
