@@ -99,6 +99,15 @@ module Filetool
 
       Dir.rmdir(dirname)
     end
+
+    def ls(dirname)
+      raise "No such directory: #{dirname}"  unless Dir.exist?(dirname)
+
+      Dir.children(dirname).map do |name|
+        path = File.join(dirname, name)
+        format("%-12s%s", File.directory?(path) ? "Directory:" : "", name)
+      end
+    end
   end
 end
 
