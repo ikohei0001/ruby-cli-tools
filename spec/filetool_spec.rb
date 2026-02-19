@@ -1,6 +1,7 @@
 require_relative "../lib/filetool.rb"
 require "tempfile"
 require "tmpdir"
+require "fileutils"
 
 RSpec.describe "filetool" do
   it "shows file content" do
@@ -159,5 +160,25 @@ RSpec.describe "filetool" do
 
       expect { Filetool.rmdir(tmp) }.to raise_error("Directory is not empty: #{tmp}")
     end
+  end
+
+  it "raises error when directory does not exist" do
+    dir = "no such directory"
+    expect { Filetool.ls(dir) }.to raise_error("No such directory: #{dir}")
+  end
+
+  it "shows file and directory" do
+    dir = "temp"
+    Dir.mkdir(dir)
+    File.write(File.join(dir, "test.txt"), "")
+    Dir.mkdir(File.join(dir, "subdir"))
+
+    result = Filetool.ls(dir)
+    expect(result).to contain_exactly(
+      format("%-12s%s", "", "test.txt"),
+      format("%-12s%s", "Directory:", "subdir")
+    )
+
+    FileUtils.rm_rf(dir)
   end
 end
