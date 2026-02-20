@@ -181,4 +181,8 @@ RSpec.describe "filetool" do
 
     FileUtils.rm_rf(dir)
   end
+
+  it "returns current directory" do
+    expect(Filetool.pwd).to eq(Dir.pwd)
+  end
 end
