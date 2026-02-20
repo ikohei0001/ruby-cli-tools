@@ -108,6 +108,15 @@ module Filetool
         format("%-12s%s", File.directory?(path) ? "Directory:" : "", name)
       end
     end
+
+    def pwd
+      Dir.pwd
+    end
+
+    def cd(path)
+      Dir.chdir(path)
+      Dir.pwd
+    end
   end
 end
 
