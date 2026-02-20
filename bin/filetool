@@ -35,6 +35,8 @@ if __FILE__ == $0
     puts " filetool rename <old> <new>"
     puts " filetool mkdir <dirname>"
     puts " filetool rmdir <dirname>"
+    puts " filetool pwd"
+    puts " filetool cd <path>"
     exit
   end
 
@@ -93,6 +95,12 @@ if __FILE__ == $0
 
     when "ls"
       puts Filetool.ls(arg0)
+
+    when "pwd"
+      puts Filetool.pwd
+
+    when "cd"
+      puts Filetool.cd(arg0)
 
     else
       puts "Unknown command: #{command}"
