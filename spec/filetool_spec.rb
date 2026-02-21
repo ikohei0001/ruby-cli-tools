@@ -102,7 +102,7 @@ RSpec.describe "filetool" do
   end
 
   it "does not delete a file that does not exist" do
-    expect(Filetool.delete("test.txt")).to eq("File not found")
+    expect { Filetool.delete("no_file.txt") }.to raise_error(RuntimeError, "File not found")
   end
 
   it "renames a file" do
