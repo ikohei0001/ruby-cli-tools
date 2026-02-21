@@ -2,6 +2,24 @@
 require_relative "../lib/filetool.rb"
 require "optparse"
 
+  def show_usage
+    puts "Usage:"
+    puts " filetool show <file>"
+    puts " filetool stats <file>"
+    puts " filetool add <file> \"text\""
+    puts " filetool search <file> \"text\""
+    puts " filetool replace <file> \"from\" \"to\""
+    puts " filetool create <file>"
+    puts " filetool delete <file>"
+    puts " filetool rename <old> <new>"
+    puts " filetool mkdir <dirname>"
+    puts " filetool rmdir <dirname>"
+    puts " filetool ls <dirname>"
+    puts " filetool pwd"
+    puts " filetool cd <path>"
+    exit
+  end
+
 if __FILE__ == $0
 
   options = {}
@@ -17,99 +35,91 @@ if __FILE__ == $0
   end
 
   opt.parse!
-  
-  command = ARGV.shift
-  filename = ARGV.shift
-  arg1 = ARGV.shift
-  arg2 = ARGV.shift
 
-  if command.nil? || filename.nil?
-    puts "Usage:"
-    puts " filetool show <file>"
-    puts " filetool stats <file>"
-    puts " filetool add <file> \"text\""
-    puts " filetool search <file> \"text\""
-    puts " filetool replace <file> \"from\" \"to\""
-    puts " filetool create <file>"
-    puts " filetool delete <file>"
-    puts " filetool rename <old> <new>"
-    puts " filetool mkdir <dirname>"
-    puts " filetool rmdir <dirname>"
-    puts " filetool pwd"
-    puts " filetool cd <path>"
-    exit
+  command = ARGV.shift
+
+  if command.nil?
+    show_usage
+    exit 1
   end
 
   begin
     case command
+
     when "show"
+      filename = ARGV.shift or abort("File is missing")
       puts Filetool.show(filename)
 
     when "stats"
+      filename = ARGV.shift or abort("File is missing")
       result = Filetool.stats(filename)
       puts "Lines: #{result[:lines]}"
       puts "Words: #{result[:words]}"
       puts "Chars: #{result[:chars]}"
 
     when "add"
-      if arg1.nil?
-        puts "Text to add is missing"
-        exit 1
-      end
-      Filetool.add(filename, arg1)
+      filename = ARGV.shift or abort("File is missing")
+      text = ARGV.shift or abort("Text to add is missing")
+      Filetool.add(filename, text)
       puts "Added text to #{filename}"
 
     when "search"
-      if arg1.nil?
-        puts "string to search is missing"
-        exit 1
-      end
-      puts Filetool.search(filename, arg1, options)
+      filename = ARGV.shift or abort("File is missing")
+      text = ARGV.shift or abort("String to search is missing")
+      puts Filetool.search(filename, text, options)
 
     when "replace"
-      if arg1.nil? || arg2.nil?
-        puts "string to replace is missing"
-        exit 1
-      end
-      puts Filetool.replace!(filename, arg1, arg2)
+      filename = ARGV.shift or abort("File is missing")
+      from = ARGV.shift or abort("String to replace is missing")
+      to = ARGV.shift or abort("Replacement string is missing")
+      puts Filetool.replace!(filename, from, to)
 
     when "create"
+      filename = ARGV.shift or abort("File is missing")
       Filetool.create(filename)
       puts "Created #{filename}"
 
     when "delete"
+      filename = ARGV.shift or abort("File is missing")
       Filetool.delete(filename)
       puts "Deleted #{filename}"
 
     when "rename"
-      Filetool.rename(filename, arg1)
-      puts "Renamed #{filename} to #{arg1}"
+      old = ARGV.shift or abort("Old filename is missing")
+      new_name = ARGV.shift or abort("New filename in missing")
+      Filetool.rename(old, new_name)
+      puts "Renamed #{old} to #{new_name}"
 
     when "mkdir"
-      Filetool.mkdir(arg0)
+      dirname = ARGV.shift or abort("Directory name is missing")
+      Filetool.mkdir(dirname)
       puts "Directory created"
 
     when "rmdir"
-      Filetool.rmdir(arg0)
+      dirname = ARGV.shift or abort("Directory name is missing")
+      Filetool.rmdir(dirname)
       puts "Directory deleted"
 
     when "ls"
-      puts Filetool.ls(arg0)
+      dirname = ARGV.shift || "."
+      puts Filetool.ls(dirname)
 
     when "pwd"
       puts Filetool.pwd
 
     when "cd"
-      puts Filetool.cd(arg0)
+      path = ARGV.shift or abort("Path is missing")
+      puts Filetool.cd(path)
 
     else
       puts "Unknown command: #{command}"
+      exit 1
     end
-  rescue Errno::ENOENT
-    puts "File not found: #{filename}"
+  rescue Errno::ENOENT => e
+    puts "File not found: #{e.message}"
     exit 1
-  rescue Errno::EACCES
-    puts "Permission denied: #{filename}"
+  rescue Errno::EACCES => e
+    puts "Permission denied: #{e.message}"
     exit 1
   rescue => e
     puts "Unexpected error: #{e.message}"
