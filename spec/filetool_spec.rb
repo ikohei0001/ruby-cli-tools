@@ -185,4 +185,23 @@ RSpec.describe "filetool" do
   it "returns current directory" do
     expect(Filetool.pwd).to eq(Dir.pwd)
   end
+
+  it "renames files by seqrename command"  do
+    Dir.mktmpdir do |dir|
+      File.write(File.join(dir, "cat"), "")
+      File.write(File.join(dir, "dog"), "")
+      File.write(File.join(dir, "rabbit"), "")
+      Dir.mkdir(File.join(dir, "subdir"))
+
+      Dir.chdir(dir) do
+        Filetool.seqrename("animal")
+        files = Dir.children(dir)
+        
+        expect(files).to include("animal_001")
+        expect(files).to include("animal_002")
+        expect(files).to include("animal_003")
+        expect(files).to include("subdir")
+      end
+    end
+  end
 end
