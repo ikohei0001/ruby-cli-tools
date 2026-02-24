@@ -110,6 +110,31 @@ module Filetool
     Dir.chdir(path)
     Dir.pwd
   end
+
+  def seqrename(prefix = "file")
+    count = 1
+
+    files = Dir.glob("*")
+               .select { |f| File.file?(f) }
+               .reject { |f| f.match?(/^#{Regexp.escape(prefix)}_\d{3}/) }
+               .sort
+    
+    files.each do |file|
+      ext = File.extname(file)
+
+      loop do
+        new_name = "#{prefix}_#{format("%03d", count)}#{ext}"
+        if File.exist?(new_name)
+          count += 1
+          next
+        end
+
+        File.rename(file, new_name)
+        count += 1
+        break
+      end
+    end
+  end
 end
 
 
