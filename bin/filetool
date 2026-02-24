@@ -17,6 +17,7 @@ require "optparse"
     puts " filetool ls <dirname>"
     puts " filetool pwd"
     puts " filetool cd <path>"
+    puts " filetool seqrename <prefix>"
     exit
   end
 
@@ -110,6 +111,11 @@ if __FILE__ == $0
     when "cd"
       path = ARGV.shift or abort("Path is missing")
       puts Filetool.cd(path)
+
+    when "seqrename"
+      prefix = ARGV.shift or abort("File is missing")
+      Filetool.seqrename(prefix)
+      puts "File renamed"
 
     else
       puts "Unknown command: #{command}"
