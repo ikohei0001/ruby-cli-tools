@@ -64,21 +64,25 @@ module Filetool
   end
 
   def create(filename)
-    raise "File already exists" if File.exist?(filename)
-    File.write(filename, "")
+    File.open(filename, "wx") {}
+  rescue Errno::EEXIST
+    raise "File already exists: #{filename}"
   end
 
   def delete(filename)
-    raise "File not found" unless File.exist?(filename)
     File.delete(filename)
+  rescue Errno::ENOENT
+    raise "File not found: #{filename}"
   end
 
-  def rename(old_name, new_name)
-    raise "File not found #{old_name}" unless File.exist?(old_name)
-    raise "File already exist: #{new_name}" if File.exist?(new_name)
-
-    File.rename(old_name, new_name)
-  end
+def rename(old_name, new_name)
+  File.link(old_name, new_name)
+  File.unlink(old_name)
+rescue Errno::ENOENT
+  raise "File not found: #{old_name}"
+rescue Errno::EEXIST
+  raise "File already exist: #{new_name}"
+end
 
   def mkdir(dirname)
     raise "Directory exist: #{dirname}" if Dir.exist?(dirname)
