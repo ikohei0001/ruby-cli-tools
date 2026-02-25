@@ -89,7 +89,7 @@ RSpec.describe "filetool" do
   it "does not create a new file because of existing file" do
     File.write("test.txt", "hello") 
 
-    expect { Filetool.create("test.txt") }.to raise_error(RuntimeError, "File already exists")
+    expect { Filetool.create("test.txt") }.to raise_error(RuntimeError, "File already exists: test.txt")
 
     File.delete("test.txt") if File.exist?("test.txt")
   end
@@ -102,7 +102,7 @@ RSpec.describe "filetool" do
   end
 
   it "does not delete a file that does not exist" do
-    expect { Filetool.delete("no_file.txt") }.to raise_error(RuntimeError, "File not found")
+    expect { Filetool.delete("no_file.txt") }.to raise_error("File not found: no_file.txt")
   end
 
   it "renames a file" do
