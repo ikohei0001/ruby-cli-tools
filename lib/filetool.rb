@@ -75,26 +75,27 @@ module Filetool
     raise "File not found: #{filename}"
   end
 
-def rename(old_name, new_name)
-  File.link(old_name, new_name)
-  File.unlink(old_name)
-rescue Errno::ENOENT
-  raise "File not found: #{old_name}"
-rescue Errno::EEXIST
-  raise "File already exist: #{new_name}"
-end
+  def rename(old_name, new_name)
+    File.link(old_name, new_name)
+    File.unlink(old_name)
+  rescue Errno::ENOENT
+    raise "File not found: #{old_name}"
+  rescue Errno::EEXIST
+    raise "File already exist: #{new_name}"
+  end
 
   def mkdir(dirname)
-    raise "Directory exist: #{dirname}" if Dir.exist?(dirname)
-
     Dir.mkdir(dirname)
+  rescue  Errno::EEXIST
+    raise "Directory exist: #{dirname}"
   end
 
   def rmdir(dirname)
-    raise "No such directory: #{dirname}" unless Dir.exist?(dirname)
-    raise "Directory is not empty: #{dirname}" unless Dir.empty?(dirname)
-
     Dir.rmdir(dirname)
+  rescue Errno::ENOENT
+    raise "Directory not found: #{dirname}"
+  rescue Errno::ENOTEMPTY
+    raise "Directory is not empty: #{dirname}"
   end
 
   def ls(dirname)
