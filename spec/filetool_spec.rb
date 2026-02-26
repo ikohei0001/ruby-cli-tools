@@ -151,7 +151,7 @@ RSpec.describe "filetool" do
     dirname = "not_exist"
 
     expect(Dir.exist?(dirname)).to be false
-    expect { Filetool.rmdir(dirname) }.to raise_error("No such directory: #{dirname}")
+    expect { Filetool.rmdir(dirname) }.to raise_error("Directory not found: #{dirname}")
   end
 
   it "does not delete a non-empty directory" do
