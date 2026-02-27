@@ -46,21 +46,24 @@ module Filetool
   def replace!(filename, from, to)
     results = []
 
-    Tempfile.create do |tmp|
+    Tempfile.create(File.basename(filename), File.dirname(filename)) do |tmp|
       File.foreach(filename).with_index(1) do |line, no|
-        if line.match?(from)
-          replaced = line.gsub(from, to)
-          results << "#{no}: #{replaced.chomp}"
-          tmp.write(replaced)
-        else
-          tmp.write(line)
+        replaced = line.gsub(from, to)
+
+        if replaced != true
+        results << "#{no}: #{replaced.chomp}"
         end
+        tmp.write(replaced)
       end
 
       tmp.flush
-      File.write(filename, File.read(tmp.path))
+      tmp.fsync
+
+      File.rename(tmp.path, filename)
     end
     results
+  rescue Errno::ENOENT
+    raise "File not found: #{filename}"
   end
 
   def create(filename)
@@ -127,16 +130,14 @@ module Filetool
     files.each do |file|
       ext = File.extname(file)
 
-      loop do
+      begin
         new_name = "#{prefix}_#{format("%03d", count)}#{ext}"
-        if File.exist?(new_name)
-          count += 1
-          next
-        end
-
-        File.rename(file, new_name)
+        File.link(file, new_name)
+        File.unlink(file)
         count += 1
-        break
+      rescue Errno::EEXIST
+        count += 1
+        retry
       end
     end
   end
