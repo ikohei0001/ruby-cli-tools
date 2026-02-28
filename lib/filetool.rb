@@ -50,7 +50,7 @@ module Filetool
       File.foreach(filename).with_index(1) do |line, no|
         replaced = line.gsub(from, to)
 
-        if replaced != true
+        if replaced != line
         results << "#{no}: #{replaced.chomp}"
         end
         tmp.write(replaced)
