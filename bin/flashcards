@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+words = {}
+
+loop do
+  puts "1: 追加  2: 一覧  3: 終了"
+  print "> "
+  choice = gets.chomp
+
+  case choice
+  when "1"
+    print "英単語: "
+    english = gets.chomp
+
+    print "意味: "
+    japanese = gets.chomp
+    words[english] = japanese
+    puts "追加しました！"
+
+
+  when "2"
+    puts "--- 単語一覧 ---"
+    words.each do |eng, jap|
+      puts "#{eng} : #{jap}"
+    end
+
+  when "3"
+    puts "終了します"
+    break
+
+  else
+    puts "もう一度選んでください"
+  end
+end
